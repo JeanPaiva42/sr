@@ -206,7 +206,6 @@ class EmbrapaMethod extends RecosService
 function scoreFinalDistancias($userDistancias, $favDistancias,$infoConteudoFavoritado){
   $finalScore = array();
   foreach ($favDistancias as $fav) {
-
     foreach ($fav as $key => $value) {
       if(!in_array($key,$infoConteudoFavoritado)){
         if(!array_key_exists($key, $finalScore)){
@@ -215,6 +214,9 @@ function scoreFinalDistancias($userDistancias, $favDistancias,$infoConteudoFavor
         $finalScore[$key]+=$value;
     }
   }
+  }
+  foreach ($userDistancias as $key => $value) {
+      $finalScore[$key]+=$value;
   }
   return $finalScore;
 }//function
