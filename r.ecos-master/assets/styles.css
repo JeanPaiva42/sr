@@ -1,0 +1,411 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+* {
+    -webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+}
+
+*{
+    font-family: 'Work Sans', sans-serif;
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    padding:0;
+    background:#F4F4F4;
+}
+
+.clear{
+    clear:both;
+}
+
+.miolo{
+    margin-left: auto;
+    margin-right: auto;
+    max-width:1200px;
+}
+
+.menu{
+    list-style: none;
+    margin:0;
+    padding:0;
+    margin-top:35px;
+}
+
+.menu li{
+    margin:0;
+    /*border-bottom:solid 1px #222222;*/
+}
+.menu li a{
+    font-weight: 100;
+    font-size: 15px;
+    display:block;
+    padding:10px 12px;
+    color:white;
+    text-decoration: none;
+    
+}
+.menu li a:hover,
+.menu li a:hover i{
+    /*background:white;*/
+    color:#7f5f80;
+}
+
+.form-input{
+    background:rgba(255,255,255,0.05);
+    border:0;
+    border-bottom:solid 1px rgba(255,255,255,0.3);
+    padding:4px 10px;
+    width:100%;
+    margin-top:12px;
+    outline:none;
+    color:white;
+    font-size:14px;
+    font-weight: 100;
+}
+
+.form-select{
+    background:rgba(255,255,255,0.05);
+    border:0;
+    border-bottom:solid 1px rgba(255,255,255,0.3);
+    padding:4px 10px;
+    width:100%;
+    margin-top:12px;
+    outline:none;
+    color:white;
+    font-size:14px;
+    font-weight: 100;
+}
+
+.form-input::placeholder{
+    color:rgba(255,255,255,0.5);
+
+}
+
+.form-button{
+    background:rgba(255,255,255,1);
+    border:0;
+    
+    padding:10px 10px;
+    width:100%;
+    margin-top:20px;
+    outline:none;
+    color:black;
+    font-size:12px;
+}
+
+.form-adicionar{
+    width:80%; 
+    margin-left:auto; 
+    margin-right:auto; 
+    top:0; 
+    position:absolute; 
+    margin-top:100%; 
+    opacity:0;
+}
+
+.layout-header{
+
+    padding-top: 0px;
+    padding-bottom: 0px;
+    /*background-image: url('../img/background-gradient.jpg');*/
+    /*background-size: 115%;*/
+    /*background-position: top center;*/
+    /*border-bottom: solid 4px #E1E1E1;*/
+
+    
+    /*background:white;*/
+
+    
+}
+
+
+
+.layout-menu{
+    font-weight:500;
+    text-align:center;
+    font-size:12px;
+    /*color:white;*/
+    color:#333;
+}
+
+/*.icon-menu{
+    margin-left:10px;
+    float:left;
+    color:white;
+}*/
+
+.icon-menu-interno{
+    margin-right:10px;
+    /*float:left;*/
+    /*color:white;*/
+    font-size:10px;
+    vertical-align: middle;
+}
+/*
+.icon-add{
+    margin-right:10px;
+    float:right;
+    color:white;
+}*/
+
+.icon-trending{
+    color: #00a92c;
+    /*margin-right:5px;*/
+    font-size:16px;
+    vertical-align: middle;
+}
+
+.header-saldo{
+    font-weight:300;
+    font-size:14px;
+    /*color:rgba(255,255,255,0.5);*/
+    color:rgba(0,0,0,0.5);
+    text-align: center;
+    margin: 10px 0 20px 0;
+}
+
+.header-depositos-juros,
+.header-depositos-juros a{
+    font-weight:300;
+    font-size:14px;
+    /*color:rgba(255,255,255,0.5);*/
+    color:rgba(0,0,0,0.5);
+    text-align: center;
+    margin: 20px 0 20px 0;
+    text-decoration: none;
+}
+
+.header-valor a{
+    font-weight:300;
+    font-size:42px;
+    /*color:white;*/
+    color:black;
+    /*margin: 0 10px 0 20px;*/
+    /*float:left;*/
+    text-align: center;
+    text-decoration: none;
+}
+
+.header-cifrao{
+    font-weight:100;
+    font-size:18px;
+    margin-right:10px;
+    float:left;
+    margin-top:20px;
+}
+
+.header-valor .valor{
+    width:64%;
+    float:left;
+    /*margin-right:10px;*/
+    /*float:left;*/
+    /*background:yellow;*/
+    text-align:center;
+}
+
+
+.header-trending-left{
+    width:18%;
+    font-size:10px;
+    float:left;
+    margin-top:0px;
+    /*margin-left:20px;*/
+    /*width:30px;*/
+    /*background:blue;*/
+}
+
+.header-trending{
+    width:18%;
+    /*background:red;*/
+    font-size:10px;
+    float:right;
+    margin-top:-10px;
+    /*margin-right:20px;*/
+    /*width:30px;*/
+}
+
+.trending-positivo{
+    color:#00a92c;
+}
+
+.trending-negativo{
+    color:#FF5252;
+}
+
+.layout-graficos{
+    height:200px;
+    /*background:white;*/
+    /*border-top: solid 2px rgba(0,0,0,0.1);*/
+    /*border-bottom: solid 2px rgba(0,0,0,0.1);*/
+    font-size: 14px;
+    color:#999;
+    text-align: center;
+    padding:30px 20px;
+}
+
+.graficos-alocacao{ 
+    float:left; 
+    width:50%; 
+    border-right: solid 1px rgba(0,0,0,0.2);
+}
+
+.graficos-evolucao{ 
+    float:right; 
+    width:50%;}
+
+.layout-investimentos,
+.layout-corretoras{
+    /*background:#F4F4F4;*/
+
+    padding-top:10px;
+    padding-bottom:10px;
+
+}
+
+.investimentos-header,
+.investimentos-header a,
+.corretoras-header,
+.corretoras-header a{
+    font-size:14px;
+    color:#999999;
+    text-align: center;
+    margin-top:10px;
+    margin-bottom:20px;
+    text-decoration: none;
+}
+
+.investimento,
+.corretora{
+    padding-bottom:10px;
+    border-bottom:solid 1px #E1E1E1;
+    margin: 0 10px 20px 10px;
+    
+}
+
+.investimento-icone,
+.corretora-icone{
+    float:left;
+    /*margin-left:10px;*/
+
+    margin-right:10px;
+}
+
+.investimento-icone img,
+.corretora-icone img{
+
+    border-radius: 50% 50%;
+}
+
+
+.investimento-titulo,
+.corretora-titulo{
+    /*color:#7f6081;*/
+    /*color:white;*/
+    font-weight: 700;
+    font-size:14px;
+    margin-top:0;
+}
+.investimento-corretora{
+    /*color:#666666;*/
+    /*color:rgba(255,255,255,0.8);*/
+    color:rgba(0,0,0,0.8);
+    font-weight: 300;
+    font-size:14px;
+}
+.investimento-valor,
+.corretora-valor{
+    float:right;
+    text-align: right;
+    /*color:#FFFFFF;*/
+    color:black;
+    /*color:#000000;*/
+    font-size:18px;
+    /*margin-right:10px;*/
+}
+
+.mdl-menu__item{
+    padding:0;
+}
+
+.mdl-menu__item .submenu{
+    padding:0 16px;
+    font-weight: 100;
+    text-decoration: none;
+}
+
+.listagem-ul{
+    width:250px;
+}
+
+.box-branco{
+    width:100%; 
+    margin:10px auto 20px auto; 
+    min-height:auto;
+    background:white;
+    padding:20px;
+}
+
+.box{
+    width:100%; 
+    margin:30px auto 0px auto; 
+    text-align:center; 
+    background:white; 
+    padding:0 50px 50px 50px; 
+    border:solid 1px #F0F0F0; 
+    border-bottom: solid 2px #E1E1E1;
+}
+
+.mdl-dialog {
+  border: none;
+  box-shadow: 0 9px 46px 8px rgba(0, 0, 0, 0.14), 0 11px 15px -7px rgba(0, 0, 0, 0.12), 0 24px 38px 3px rgba(0, 0, 0, 0.2);
+  width: 80px; }
+  .mdl-dialog__title {
+    padding: 24px 24px 0;
+    margin: 0;
+    font-size: 2.5rem; }
+  .mdl-dialog__actions {
+    padding: 8px 8px 8px 24px;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: row-reverse;
+        -ms-flex-direction: row-reverse;
+            flex-direction: row-reverse;
+    -webkit-flex-wrap: wrap;
+        -ms-flex-wrap: wrap;
+            flex-wrap: wrap; }
+    .mdl-dialog__actions > * {
+      margin-right: 8px;
+      height: 36px; }
+      .mdl-dialog__actions > *:first-child {
+        margin-right: 0; }
+    .mdl-dialog__actions--full-width {
+      padding: 0 0 8px 0; }
+      .mdl-dialog__actions--full-width > * {
+        height: 48px;
+        -webkit-flex: 0 0 100%;
+            -ms-flex: 0 0 100%;
+                flex: 0 0 100%;
+        padding-right: 16px;
+        margin-right: 0;
+        text-align: right; }
+  .mdl-dialog__content {
+    padding: 20px 24px 24px 24px;
+    color: rgba(0,0,0, 0.54); }
