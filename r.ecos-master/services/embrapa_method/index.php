@@ -126,15 +126,15 @@ class EmbrapaMethod extends RecosService
     function getRegiao($regiao)
     {
         switch ($regiao) {
-            case 1:
+            case 0:
                 return "sudeste";
-            case 2:
+            case 1:
                 return "sul";
-            case 3:
+            case 2:
                 return "norte";
-            case 4:
+            case 3:
                 return "centroOeste";
-            case 5:
+            case 4:
                 return "nordeste";
         }
     }
