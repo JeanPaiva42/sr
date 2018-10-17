@@ -37,11 +37,11 @@ class EmbrapaMethod extends RecosService
         /* PEGA INFORMAÇÕES SOBRE ESTE PROJETO */
 
         $this->conn = conectar();
-
+/*
         $aux        = sql_select($this->conn, 'recos_tb_projects', NULL, 'txt_hash_pro = \'' . $token . '\' ');
         $project    = sql_fetch_array($aux);
         $id_project = $project['pk_cod_project'];
-
+*/
 
         $this->__token = $token;
 
@@ -57,15 +57,12 @@ class EmbrapaMethod extends RecosService
             if (isset($_GET['profiling'])) {
                 $profiling = urldecode($_GET['profiling']);
             }
-
-
-
-
-
+/*
             $profiling_service = sql_fetch_array(sql_select($this->conn, 'recos_tb_services', NULL, "pk_cod_service = " . $project['fk_cod_profiling_pro'] . " "));
             $profiling_url     = URL_PADRAO . 'services/' . $profiling_service['txt_url_ser'] . '/?key=' . $token . '&userid=' . $userid;
             $profiling_result  = file_get_contents($profiling_url);
             $profiling         = json_decode($profiling_result);
+            */
             //simulando dados usuário solicitante dos recursos
             //o CORRETO é pegar pela API DA EMBRAPA =>> /pesquisaCadastroUsuario
             if (isset($_GET['userid'])) {
