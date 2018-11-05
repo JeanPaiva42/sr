@@ -7,7 +7,6 @@
 //d046fefdec9f4139ab36f11b49f6c56f
 
 include("../../classes/RecosService.php");
-
 // exit('deu certo');
 
 
@@ -38,6 +37,7 @@ class EmbrapaMethod extends RecosService
         /* PEGA INFORMAÇÕES SOBRE ESTE PROJETO */
 
         $this->conn = conectar();
+
         $aux        = sql_select($this->conn, 'recos_tb_projects', NULL, 'txt_hash_pro = \'' . $token . '\' ');
         $project    = sql_fetch_array($aux);
         $id_project = $project['pk_cod_project'];
@@ -52,13 +52,15 @@ class EmbrapaMethod extends RecosService
 
         } else {
 
-
-
             //echo '[{"status": "token ok"}]';
             //com os dados de todos usuários, basta agora realizar o cálculo
             if (isset($_GET['profiling'])) {
                 $profiling = urldecode($_GET['profiling']);
             }
+
+
+
+
 
             $profiling_service = sql_fetch_array(sql_select($this->conn, 'recos_tb_services', NULL, "pk_cod_service = " . $project['fk_cod_profiling_pro'] . " "));
             $profiling_url     = URL_PADRAO . 'services/' . $profiling_service['txt_url_ser'] . '/?key=' . $token . '&userid=' . $userid;
@@ -69,28 +71,34 @@ class EmbrapaMethod extends RecosService
             if (isset($_GET['userid'])) {
                 $userid = $_GET['userid'];
             }
+            $infoUsuarioSolicitante = json_decode(file_get_contents("http://".$_SERVER['SERVER_NAME']."/r.ecos-master/services/embrapa_profiling/index.php?key=d046fefdec9f4139ab36f11b49f6c56f&userid=".$userid));
 
-            $infoUsuarioSolicitante = json_decode(file_get_contents("http://".$_SERVER['SERVER_NAME']."/r.ecos-master/services/embrapa_profiling/index.php?key=d046fefdec9f4139ab36f11b49f6c56f&userid=".$userid), true);
-            $todasMidias = json_decode(file_get_contents("http://".$_SERVER['SERVER_NAME']."/r.ecos-master/services/embrapa_repository/index.php?key=d046fefdec9f4139ab36f11b49f6c56f&userid=".$userid), true);
+            $infoConteudoAcessado   = json_decode(file_get_contents("http://hereford.cnpgl.embrapa.br/AppLeiteWebService/recomendaappleite/pesquisaAcessosUsuario?idUsuario=" . $userid));
+            $infoConteudoFavoritado = json_decode(file_get_contents("http://hereford.cnpgl.embrapa.br/AppLeiteWebService/recomendaappleite/pesquisaFavoritosUsuario?idUsuario=" . $userid));
+            $todasMidias            = json_decode(file_get_contents("http://hereford.cnpgl.embrapa.br/AppLeiteWebService/recomendaappleite/todasMidias"));
+            $arrayCartilha = array();
+            $arrayCartilha = reset($todasMidias);
+
+            $favoritasDoUsuario = $this->getFavorites($infoConteudoFavoritado, $arrayCartilha);
 
 
-            $favoritasDoUsuario = json_decode(file_get_contents("http://".$_SERVER['SERVER_NAME']."/r.ecos-master/services/embrapa_favorite/index.php?key=d046fefdec9f4139ab36f11b49f6c56f&userid=".$userid), true);
-            $infoConteudoFavoritado = array_shift($favoritasDoUsuario);
+            $arrayCartilha  = array();
+            $arrayCartilha  = reset($todasMidias);
             $arr_distancias = array();
-            $dists = $this->distanciaEntreUsuarioCartilha($infoUsuarioSolicitante,  $todasMidias, $infoConteudoFavoritado);
+            $dists          = $this->distanciaEntreUsuarioCartilha($infoUsuarioSolicitante, (array) $arrayCartilha, $infoConteudoFavoritado);
             asort($dists);
             array_reverse($dists, true);
-
             $score = array();
-            $favRec = array();
             if(!empty($infoConteudoFavoritado)){
-              $favRec = $this->distanciaEntreFavoritoCartilha($favoritasDoUsuario, $todasMidias,$infoUsuarioSolicitante);
-
+              $favRec = $this->distanciaEntreFavoritoCartilha($favoritasDoUsuario, $arrayCartilha,$infoUsuarioSolicitante);
               asort($favRec);
               array_reverse($favRec, true);
-              $score = $this->scoreFinalDistancias($dists, $favRec, $infoConteudoFavoritado);
+              $score = $favRec;
+              //$score = $this->scoreFinalDistancias($dists, $favRec, $infoConteudoFavoritado);
               asort($score);
               array_reverse($score, true);
+                echo json_encode($favRec);
+
             }
             //ordena este array, por distâncias do menor para maior
             else{
@@ -100,25 +108,66 @@ class EmbrapaMethod extends RecosService
             //$arr_distancias_cortado = array_slice($arr_distancias,0,5);
             $result = json_encode($score);
             //$result = json_encode($arr_distancias_cortado);
-            echo json_encode($score);
+            //echo $result;
 
         } //else
 
     }
 
+    function getFavorites($favs, $todasM){
+      $cartilhaUsuario = array();
 
+
+      foreach ($favs as $f){
+          foreach($todasM as $cart){
+          $ca = (array)$cart;
+          if($ca['codAinfo'] == $f){
+          $cartilhaUsuario[] = $ca;
+          }
+        }
+      }
+      return $cartilhaUsuario;
+    }
+
+    function getRegiao($regiao)
+    {
+        switch ($regiao) {
+            case 0:
+                return "sudeste";
+            case 1:
+                return "sul";
+            case 2:
+                return "norte";
+            case 3:
+                return "centroOeste";
+            case 4:
+                return "nordeste";
+        }
+    }
     function distanciaEntreUsuarioCartilha($usu1, $cartilhas, $infoConteudoFavoritado)
     {
 
         // echo 'entrou!';
         //CONVERSÕES caso os parâmetros cheguem aqui como OBJETOS, e não como ARRAYS
+        $user                      = array();
+        $usu1                      = (array) $usu1;
+        $user['idNivelLetramento'] = $usu1['idNivelLetramento'];
+        $regioes                   = array(
+            "sudeste",
+            "sul",
+            "norte",
+            "centroOeste",
+            "nordeste"
+        );
+        /*foreach ($regioes as $r) {
+            $user[$r] = 0;
+        }
+        $regi        = $this->getRegiao($usu1['idRegiao']);
+        $user[$regi] = 1;
         $distancia   = 0;
-        $distArray   = array();
-        $user = $usu1;
-         foreach ($cartilhas as $cart) {
-
-            $cart = (array) $cart;
-
+        $distArray   = array();*/
+        foreach ($cartilhas as $cart) {
+            $cart       = (array) $cart;
             $distancia  = 0;
             //itera nas características dos usuários
             if (!(in_array($cart['codAinfo'], $infoConteudoFavoritado))){
@@ -138,12 +187,13 @@ class EmbrapaMethod extends RecosService
 
     function distanciaEntreFavoritoCartilha($favs, $cartilhas, $usuario){
       $favsArray = array();
-      $user = $usuario;
+      $user = (array)$usuario;
 
-        foreach ($favs as $cart) {
+      foreach ($favs as $cart) {
         $distArray = array();
         foreach ($cartilhas as $midia) {
-            $distancia = 0;
+          $midia = (array)$midia;
+          $distancia = 0;
          if($user['idNivelLetramento'] >= $midia['idNivelLetramento']){
           foreach ($midia as $key => $value) {
             if(($midia['codAinfo'] != $cart['codAinfo']) && ($key != "codAinfo"
@@ -159,18 +209,6 @@ class EmbrapaMethod extends RecosService
       }
       return $favsArray;
     }//function
-    function getFavorites($favs, $todasM){
-     $cartilhaUsuario = array();
-     foreach ($favs as $f){
-         foreach($todasM as $cart){
-         $ca = (array)$cart;
-         if($ca['codAinfo'] == $f){
-         $cartilhaUsuario[] = $ca;
-         }
-       }
-     }
-     return $cartilhaUsuario;
-    }
 
 function scoreFinalDistancias($userDistancias, $favDistancias,$infoConteudoFavoritado){
   $finalScore = array();

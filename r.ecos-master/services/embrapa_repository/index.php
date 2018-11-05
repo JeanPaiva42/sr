@@ -49,34 +49,39 @@ class EmbrapaRepository extends RecosService{
 
 		} else {
 
-			$filtering_service = sql_fetch_array(sql_select($this->conn,'recos_tb_services',NULL,"pk_cod_service = ".$project['fk_cod_filtering_pro']." "));
+/*			$filtering_service = sql_fetch_array(sql_select($this->conn,'recos_tb_services',NULL,"pk_cod_service = ".$project['fk_cod_filtering_pro']." "));
 			$filtering_url = URL_PADRAO.'services/'.$filtering_service['txt_url_ser'].'/?key='.$token.'&userid='.$userid;
 			$filtering_result = file_get_contents($filtering_url);
 			$filtering = json_decode($filtering_result);
-
+*/
 
 			/*
 			USA INFORMAÇÕES DA API EMBRAPA
 			*/
 			$url_repositorio = "http://hereford.cnpgl.embrapa.br/AppLeiteWebService/recomendaappleite/todasMidias";
 
-			$curl = curl_init($url_repositorio);
+      //COMENTADO TRECHO ABAIXO POR MOTIVOS DE NAO SABER PRA QUE SERVE POR ENAQUANTO
+/*
+      $curl = curl_init($url_repositorio);
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($curl, CURLOPT_POST, false);
 			curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
 			$curl_response = curl_exec($curl);
 			curl_close($curl);
+*/
 			/*
 			FIM - USA INFORMAÇÕES DA API EMBRAPA
 			*/
-			$repo = json_decode(file_get_contents($url_repositorio));
 
-			$retorno_repositorio = json_decode($curl_response);
-			$retorno_repositorio = $retorno_repositorio->midias;
-			echo $retorno_repositorio;
-			foreach( $repo as $midia ){
+			$repo = json_decode(file_get_contents($url_repositorio));
+      $repo = reset($repo);
+			//$retorno_repositorio = json_decode($curl_response);
+			//$retorno_repositorio = $retorno_repositorio->midias;
+			//print_r ($retorno_repositorio);
+		/*	foreach( $repo as $midia ){
 
 				//verificar se esta mídia está no ARRAY retorno do serviço FILTERING
+        echo ($filtering);
 				if( array_key_exists($midia->codAinfo , $filtering) ){
 					echo 'entrei';
 					//salva no BD, para saber quais recursos estão sendo recomendados
@@ -120,10 +125,10 @@ class EmbrapaRepository extends RecosService{
 				}//if
 
 			}//foreach
+*/
+	//		$result = json_encode($infoTodosUsuarios, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
-			$result = json_encode($infoTodosUsuarios, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-
-			echo $result;
+			echo (json_encode($repo));
 
 		}//else
 

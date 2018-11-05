@@ -8,14 +8,8 @@
 
 include("../../classes/RecosService.php");
 
-
-
-
-
-
 class EmbrapaProfiling extends RecosService{
-
-	function __construct(){
+  function __construct(){
 
 		if( isset($_GET['key']) ){
 			$token = $_GET['key'];
@@ -49,16 +43,32 @@ class EmbrapaProfiling extends RecosService{
 				exit;
 			}
 
+
 			//simulando dados usuário solicitante dos recursos
 			//o CORRETO é pegar pela API DA EMBRAPA =>> /pesquisaCadastroUsuario
 
 			$infoUsuarioSolicitante = json_decode(file_get_contents("http://hereford.cnpgl.embrapa.br/AppLeiteWebService/recomendaappleite/pesquisaCadastroUsuario?idUsuario=".$userid));
+      $user                      = array();
+      $usu1                      = (array) $infoUsuarioSolicitante;
+      $user['idNivelLetramento'] = $usu1['idNivelLetramento'];
+      $regioes                   = array(
+          "sudeste",
+          "sul",
+          "norte",
+          "centroOeste",
+          "nordeste"
+      );
+      foreach ($regioes as $r) {
+          $user[$r] = 0;
+      }
+      $regi        = $this->getRegiao($usu1['idRegiao']);
+      $user[$regi] = 1;
+
+			$result = json_encode($user);
+
+			echo $result;
 
 
-			$result = json_encode($infoUsuarioSolicitante);
-
-			//echo $result;
-      echo $result;
 
 			//aqui chama o próximo service - neste caso, METHOD, passando como parâmetro o $result
 			//ou não?
@@ -68,7 +78,22 @@ class EmbrapaProfiling extends RecosService{
 
 
 		}//else
-	}
+  }
+    function getRegiao($regiao)
+    {
+        switch ($regiao) {
+            case 0:
+                return "sudeste";
+            case 1:
+                return "sul";
+            case 2:
+                return "norte";
+            case 3:
+                return "centroOeste";
+            case 4:
+                return "nordeste";
+        }
+    }
 
 }//class
 
