@@ -102,11 +102,12 @@ class EmbrapaMethod extends RecosService
             $result = json_encode($score);
 
             $final_output = array();
+            $final_output["pesquisaRecomendadas"] = array();
             foreach ($score as $key=>$value){
                 $new_arr = array();
-                $new_arr["CodAinfo"] = $key;
+                $new_arr["codAinfo"] = $key;
                 $new_arr["proximidade"] = $value;
-                $final_output[] = $new_arr;
+                $final_output["pesquisaRecomendadas"][] = $new_arr;
             }
 
             echo json_encode($final_output);
