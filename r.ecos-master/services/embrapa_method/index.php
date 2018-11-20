@@ -22,6 +22,7 @@ class EmbrapaMethod extends RecosService
             $token = $_GET['key'];
         } else {
             //token inválido
+            //token inválido
             echo '[{"error": "token invalid"}]';
             exit;
         }
@@ -76,7 +77,7 @@ class EmbrapaMethod extends RecosService
 
             $favoritasDoUsuario = json_decode(file_get_contents("http://".$_SERVER['SERVER_NAME']."/r.ecos-master/services/embrapa_favorite/index.php?key=d046fefdec9f4139ab36f11b49f6c56f&userid=".$userid), true);
             $infoConteudoFavoritado = array_shift($favoritasDoUsuario);
-            $arr_distancias = array();
+                $arr_distancias = array();
             $dists = $this->distanciaEntreUsuarioCartilha($infoUsuarioSolicitante,  $todasMidias, $infoConteudoFavoritado);
             asort($dists);
             array_reverse($dists, true);
@@ -91,16 +92,24 @@ class EmbrapaMethod extends RecosService
               $score = $this->scoreFinalDistancias($dists, $favRec, $infoConteudoFavoritado);
               asort($score);
               array_reverse($score, true);
+
             }
             //ordena este array, por distâncias do menor para maior
             else{
               $score = $dists;
             }
             //mantém somente os 5 usuários mais similares. pode mudar este valor a vontade
-            //$arr_distancias_cortado = array_slice($arr_distancias,0,5);
             $result = json_encode($score);
-            //$result = json_encode($arr_distancias_cortado);
-            echo json_encode($score);
+
+            $final_output = array();
+            foreach ($score as $key=>$value){
+                $new_arr = array();
+                $new_arr["CodAinfo"] = $key;
+                $new_arr["proximidade"] = $value;
+                $final_output[] = $new_arr;
+            }
+
+            echo json_encode($final_output);
 
         } //else
 
